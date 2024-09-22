@@ -130,7 +130,7 @@ payload = json.dumps({
     }
 })
 headers = {
-    'Authorization': 'bc698f2e0eed4c43ba71c85e10d9b402',
+    'Authorization': 'Public key here',
     'Content-Type': 'application/json',
 }
 
@@ -150,7 +150,7 @@ def verify_payment(request):
         data = json.loads(request.body)
         url = "https://khalti.com/api/v2/payment/verify/"
         headers = {
-            'Authorization': f'Khalti {settings.ded8608319bf417492456d20b50392b1}',  
+            'Authorization': f'Khalti {settings.secretkey here}',  
             'Content-Type': 'application/json',
         }
         

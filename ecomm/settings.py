@@ -21,7 +21,7 @@ TEMPLATE_DIR = os.path.join(BASE_DIR , 'templates')
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-c2aiz84%f580f10e374fm&5j^k22q!^%7#g+s54_lr+ql5$b&4'
+# SECRET_KEY = "input secret key here"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -146,15 +146,15 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'himalrajbanshi681@gmail.com'
-EMAIL_HOST_PASSWORD = 'hply zojw yrwg ljct'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
 
 
 
 
-KHALTI_ID = 'bc698f2e0eed4c43ba71c85e10d9b402'
+# KHALTI_ID = 'Public key here'
 
-KHALTI_SECRET_KEY = 'ded8608319bf417492456d20b50392b1' 
+# KHALTI_SECRET_KEY = 'secret key here' 
 
 
 
