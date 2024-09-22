@@ -1,0 +1,129 @@
+{% extends "base/base.html" %}
+
+{% block start %}
+
+<section class="section-content padding-y">
+    <div class="container">
+        <div class="row">
+            <main class="col-md-9">
+                <div class="card">
+                    <table class="table table-borderless table-shopping-cart">
+                        <thead class="text-muted">
+                            <tr class="small text-uppercase">
+                                <th scope="col">Product</th>
+                                <th scope="col" width="120">Quantity</th>
+                                <th scope="col" width="120">Price</th>
+                                <th scope="col" class="text-right" width="200"> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cart_item in cart.cart_items.all %}
+                            <tr>
+                                <td>
+                                    <figure class="itemside">
+                                        {% load static %}
+                                        <div class="aside">
+                                            <img src="/media/{{ cart_item.product.product_images.first.image }}">
+                                        </div>
+                                        <figcaption class="info">
+                                            <a href="#" class="title text-dark">{{ cart_item.product.name }}</a>
+                                            {% if cart_item.size_variant %}
+                                            <p class="text-muted small">Size: {{ cart_item.size_variant.size_name }}</p>
+                                            {% endif %}
+                                        </figcaption>
+                                    </figure>
+                                </td>
+                                <td>
+                                    <select class="form-control">
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <div class="price-wrap">
+                                        <var class="price">{{ cart_item.get_product_price }}</var>
+                                    </div>
+                                </td>
+                                <td class="text-right">
+                                    <a href="{% url 'remove_cart' cart_item.uid %}" class="btn btn-light">Remove</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="amount" value="{{ cart.get_total_price }}">
+                        <button id="payment-button" class="btn btn-primary">Make Purchase</button>
+                    </form>
+
+                    <a href="#" class="btn btn-light"><i class="fa fa-chevron-left"></i> Continue shopping</a>
+                </div>
+            </main>
+            <aside class="col-md-3">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <dl class="dlist-align">
+                            <dt>Total price:</dt>
+                            <dd class="text-right">Rs {{ total_price }}</dd>
+                        </dl>
+                        <dl class="dlist-align">
+                            <dt>Total:</dt>
+                            <dd class="text-right h5"><strong>Rs {{ total_price }}</strong></dd>
+                        </dl>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+
+<script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
+
+<script>
+    var config = {
+        "publicKey": "bc698f2e0eed4c43ba71c85e10d9b402",
+        "productIdentity": "PRODUCT_ID", 
+        "productName": "PRODUCT_NAME", 
+        "productUrl": "YOUR_PRODUCT_URL",
+        "amount": "{{ cart.get_total_price|floatformat:0|add:'00' }}",
+        "eventHandler": {
+            onSuccess(payload) {
+                console.log(payload);
+                fetch('/your-verify-url/', { 
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    body: JSON.stringify(payload),
+                }).then(response => {
+                    if (response.ok) {
+                        alert('Payment successful!');
+                        window.location.href = '/success-page/'; 
+                    } else {
+                        alert('Payment verification failed!');
+                    }
+                });
+            },
+            onError(error) {
+                console.error(error);
+                alert('Payment error!');
+            },
+            onClose() {
+                console.log('widget is closing');
+            }
+        }
+    };
+
+    var checkout = new KhaltiCheckout(config);
+    document.getElementById("payment-button").addEventListener("click", function (event) {
+        event.preventDefault();
+        checkout.show();
+    });
+</script>
+
+{% endblock %}
